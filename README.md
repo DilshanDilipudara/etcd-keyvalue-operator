@@ -1,4 +1,4 @@
-# etcd-operator
+# etcd-key-value-add-update-delete-operator
 
 This operator is implemented for managing an external etcd cluster with ArgoCD. It is written using the Operator SDK framework.
 
