@@ -1,0 +1,49 @@
+apiVersion: etcd.dilshan.com/v1
+kind: EtcdConfig
+metadata:
+  labels:
+    app.kubernetes.io/name: etcd-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: etcdconfig-sample-1
+  namespace: incubator
+spec:
+  items:
+    - key: incubator/test-argo/database/host
+      value: |
+         test-db.com
+    - key: incubator/test-argo/database/port
+      value: | 
+        6033
+    - key: incubator/test-argo/events/
+      value: |
+        - event: "test-argo-1"
+          version: 50
+        - event: "stest-argo-2"
+          version: 100
+        - event: "stest-argo-3"
+          version: 20
+        - event: "test-argo-4"
+          version: 3
+        - event: "ttest-argo-5"
+          version: 10
+---
+apiVersion: etcd.dilshan.com/v1
+kind: EtcdConfig
+metadata:
+  labels:
+    app.kubernetes.io/name: etcd-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: etcdconfig-sample-2
+  namespace: incubator
+spec:
+  items:
+    - key: incubator/test-argo/database/max-idle-connections
+      value: "50"
+    - key: /incubator/test-argo/kafka/client-id
+      value: "test-argo-dev"
+    - key: /incubator/test-argo/database/timezone
+      value: "Asia/Colombo"
+    - key: /incubator/test-argo/logger/level
+      value: "TRACE"
+    - key: /incubator/test-argo/logger/colors
+      value: "true"

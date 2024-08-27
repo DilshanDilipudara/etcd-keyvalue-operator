@@ -1,0 +1,27 @@
+# permissions for end users to edit etcdconfigs.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: etcd-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: etcdconfig-editor-role
+rules:
+- apiGroups:
+  - etcd.dilshan.com
+  resources:
+  - etcdconfigs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - etcd.dilshan.com
+  resources:
+  - etcdconfigs/status
+  verbs:
+  - get

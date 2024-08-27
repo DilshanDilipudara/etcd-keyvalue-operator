@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: etcd-auth-secrets
+  namespace: etcd-operator-system
+type: Opaque  
+stringData:
+  etcdEndpoints: 
+  etcdUsername: 
+  etcdPassword: 
