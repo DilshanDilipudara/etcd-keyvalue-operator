@@ -1,6 +1,6 @@
 resources:
 - manager.yaml
-- etcd_v1_etcdconfig.yaml
+- etcd-secrets.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
