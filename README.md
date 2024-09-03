@@ -8,6 +8,8 @@ Argo watches the Git repository (specifically resources of kind EtcdConfig) and 
 
     apiVersion: etcd.dilshan.com/v1
     kind: EtcdConfig
+![etcd operator](images/etcd-operator-digram-1.png)
+
 
 # How the ETCD Operator Works
     
@@ -55,6 +57,8 @@ The operator checks for differences between the newly applied YAML and the YAML-
 2. Copy YAML File to YAML-last-synced:
 
     A copy of this YAML file is saved as YAML-last-synced to ensure the operator has the most recent configuration for future comparisons.
+
+![etcd operator](images/etcd-operator-digram-2.png)
 
 ## Getting Started
 
