@@ -58,7 +58,7 @@ func (r *EtcdConfigReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 
 	// create log instance
 	log := r.Log.WithValues("etcdconfig", req.NamespacedName)
-	log.Info("namespace name: ", "ns", req.Namespace)
+	//log.Info("namespace name: ", "ns", req.Namespace)
 	// Check if the req.Name ends with "-last-synced"
 	if strings.HasSuffix(req.Name, "-last-synced") {
 		log.Info("Skipping reconciliation for -last-synced resource", "resource", req.Name)
@@ -68,7 +68,7 @@ func (r *EtcdConfigReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 	// Fetch the EtcdConfig instance
 	var etcdConfig etcdv1.EtcdConfig
 
-	log.Info(req.Namespace)
+	//log.Info(req.Namespace)
 	if err := r.Get(ctx, req.NamespacedName, &etcdConfig); err != nil {
 		if apierrors.IsNotFound(err) {
 			log.Info("EtcdConfig resource not found. Ignoring since object must be deleted.")
@@ -99,7 +99,8 @@ func (r *EtcdConfigReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 
 		// update the etcd config
 		for _, configItem := range etcdConfig.Spec.Items {
-			if err := updateEtcdCluster(configItem.Key, configItem.Value); err != nil {
+
+			if err := updateEtcdCluster(configItem.Key, strings.TrimSuffix(configItem.Value, "\n")); err != nil {
 				log.Error(err, "Failed to update Etcd cluster", "key", configItem.Key)
 				return ctrl.Result{}, err
 			}
@@ -120,6 +121,10 @@ func (r *EtcdConfigReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 		lastSyncedConfig.ResourceVersion = ""
 		lastSyncedConfig.UID = ""
 		lastSyncedConfig.CreationTimestamp = metav1.Time{}
+		if lastSyncedConfig.Labels == nil {
+			lastSyncedConfig.Labels = make(map[string]string)
+		}
+		lastSyncedConfig.Labels["app.kubernetes.io/instance"] = req.Name + "-last-synced"
 
 		// Create the lastSyncedConfig
 		if err := r.Create(ctx, &lastSyncedConfig); err != nil {
