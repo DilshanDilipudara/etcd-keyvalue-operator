@@ -48,6 +48,8 @@ The operator checks for differences between the newly applied YAML and the YAML-
 
     The newly applied YAML file is copied to create a new YAML-last-synced file, representing the current state.
 
+4. Deletes the specified key from the etcd cluster
+
 ### If the ArgoCD Applied YAML File Does Not Exist in the Cluster:
 
 1. Update the External etcd Cluster:
