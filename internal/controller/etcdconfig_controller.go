@@ -97,8 +97,34 @@ func (r *EtcdConfigReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 			return ctrl.Result{}, err
 		}
 
-		// update the etcd config
+		// Build maps for comparison
+		currentKeys := make(map[string]string)
+		for _, item := range etcdConfig.Spec.Items {
+			currentKeys[item.Key] = item.Value
+		}
+
+		lastKeys := make(map[string]string)
+		for _, item := range lastSyncedConfig.Spec.Items {
+			lastKeys[item.Key] = item.Value
+		}
+
+		// Handle deletions
+		for key := range lastKeys {
+			if _, exists := currentKeys[key]; !exists && isAllowedEtcdKey(key) {
+				log.Info("Deleting key from etcd", "key", key)
+				if err := deleteEtcdKey(key); err != nil {
+					log.Error(err, "Failed to delete Etcd key", "key", key)
+					return ctrl.Result{}, err
+				}
+			}
+		}
+
+		// Handle create/update keys
 		for _, configItem := range etcdConfig.Spec.Items {
+			if !isAllowedEtcdKey(configItem.Key) {
+				log.Info("Skipping key due to invalid path", "key", configItem.Key)
+				continue
+			}
 
 			if err := updateEtcdCluster(configItem.Key, strings.TrimSuffix(configItem.Value, "\n")); err != nil {
 				log.Error(err, "Failed to update Etcd cluster", "key", configItem.Key)
